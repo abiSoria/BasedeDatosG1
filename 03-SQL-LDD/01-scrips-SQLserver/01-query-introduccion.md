@@ -75,4 +75,121 @@ GO
 
 SELECT * FROM Productos2;
 GO
+
+--Crear dos tablas con razon de cardinalidad de 1-N con participacion total, esto quiere decir que la FK es not null
+CREATE TABLE categoria(
+ CategoriaId int not null identity(1,1),
+ NombreCategoria nvarchar(20) not null,
+ CONSTRAINT pk_categoria
+ PRIMARY KEY(CategoriaId),
+ CONSTRAINT unique_nombrecategoria
+ UNIQUE(NombreCategoria)
+);
+GO
+
+CREATE TABLE productos3(
+ ProductoId int not null identity(1,1),
+ NombreProducto nvarchar(20) not null,
+ Existencia int not null,
+ PrecioUnitario money not null,
+ CategoriaId int not null,
+ CONSTRAINT pk_productos3
+ PRIMARY KEY(ProductoId),
+ CONSTRAINT chk_existencia3
+ CHECK(existencia >0 and Existencia <=1000),
+ CONSTRAINT chk_precioUnitario
+ CHECK(PrecioUnitario >0.0 ),
+ CONSTRAINT unique_nombreProducto3
+ UNIQUE(NombreProducto),
+ CONSTRAINT fk_productos3_categoria
+ FOREIGN KEY(CategoriaId)
+ REFERENCES categoria(CategoriaId)
+);
+GO
+
+
+CREATE TABLE categoria2(
+ Id int not null identity(1,1),
+ NombreCategoria2 nvarchar(20) not null,
+ CONSTRAINT pk_categoria2
+ PRIMARY KEY(Id),
+ CONSTRAINT unique_nombrecategoria2
+ UNIQUE(NombreCategoria2)
+);
+GO
+
+CREATE TABLE productos4(
+ ProductoId int not null identity(1,1),
+ NombreProducto nvarchar(20) not null,
+ Existencia int not null,
+ PrecioUnitario money not null,
+ CategoriaId int not null,
+ CONSTRAINT pk_productos4
+ PRIMARY KEY(ProductoId),
+ CONSTRAINT chk_existencia4
+ CHECK(existencia >0 and Existencia <=1000),
+ CONSTRAINT chk_precioUnitario4
+ CHECK(PrecioUnitario >0.0 ),
+ CONSTRAINT unique_nombreProducto4
+ UNIQUE(NombreProducto),
+ CONSTRAINT fk_productos4_categoria2
+ FOREIGN KEY(CategoriaId)
+ REFERENCES categoria2(Id)
+);
+GO
+
+CREATE TABLE tabla1(
+tablaId int not null identity(1,1),
+tablaId2 int not null,
+nombre nvarchar(20) not null,
+CONSTRAINT pk_tabla1
+PRIMARY KEY(tablaId, tablaId2)
+
+);
+GO
+
+CREATE TABLE tabla2(
+tabla2Id int not null identity(1,1),
+nombre nvarchar(20) not null,
+tablaId INT,
+tablaId2 INT,
+CONSTRAINT pk_tabla2
+PRIMARY KEY (tablaId2),
+CONSTRAINT fk_tabla2_tabla1
+FOREIGN KEY(tablaId, tablaId2)
+REFERENCES tabla1(tablaId, tablaId2)
+);
+GO
+
+--crear tablas con razon de cardinalidad de 1-1
+CREATE TABLE employee(
+id int not null identity(1,1),
+nombre nvarchar(20)not null,
+ap1 nvarchar(20)not null,
+ap2 nvarchar(20)not null,
+sexo char(1) not null,
+salario money not null,
+CONSTRAINT pk_employee
+PRIMaRY KEY(id)
+);
+GO
+
+CREATE TABLE deparment(
+employeeid int not null identity(1,1),
+nombre nvarchar(20)not null,
+ubicacion nvarchar(30)not null,
+employee int not null,
+CONSTRAINT pk_deparment_employee
+PRIMARY KEY(employeeid),
+FOREIGN KEY (employeeid)
+REFERENCES employee(id),
+CONSTRAINT unique_employeeid
+UNIQUE(employeeid)
+);
+GO
+
+
+
+
+
 ```
