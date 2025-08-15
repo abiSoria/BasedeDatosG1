@@ -236,3 +236,152 @@ WHERE p.Importe > 25000;
 --el nombre del cliente que lo encargo y el nombre del representante 
 --asignado al cliente y el importe
 
+SELECT p.Num_Pedido AS [Numero de Pedido],
+       c.Empresa AS [Cliente],
+	   r.Nombre AS [Representante Cliente],
+	   p.Importe
+FROM Representantes AS r
+INNER JOIN Clientes AS c
+ON r.Num_Empl = c.Rep_Cli
+INNER JOIN Pedidos AS p
+ON c.Num_Cli = p.Cliente
+WHERE importe > 25000;
+
+-----------------------------------------------------------------------------------------------------
+use BDG1JOINS;
+
+SELECT *
+FROM Categoria;
+
+SELECT *
+FROM Producto;
+
+-- INNER JOIN 
+
+SELECT *
+FROM Categoria AS c
+JOIN Producto AS p
+ON c.CategoriaID = p.Categoria;
+
+
+-- LEFT JOIN o LEFT OUTER JOIN
+--La primera tabala que aparece en la lista en el fron es la tabla izquierda
+
+SELECT *
+FROM Categoria AS c
+LEFT JOIN Producto AS p
+ON c.CategoriaID = p.Categoria;
+
+--Mostrar todas las categorias que no tengan los productos asignados 
+
+
+SELECT c.CategoriaID, c.Nombre
+FROM Categoria AS c
+LEFT JOIN Producto AS p
+ON c.CategoriaID = p.Categoria
+WHERE p.Categoria is null;
+
+-- RIGHT JOIN o RIGHT OUTER JOIN
+--Toma todos los datos de la tabla derecha y los que coinciden con la tabla izquierda
+--y los que no coinciden los pone en null
+
+SELECT *
+FROM Categoria AS c
+RIGHT JOIN Producto AS p
+ON c.CategoriaID = p.Categoria;
+--WHERE p.Categoria is null;
+
+--Selecciona todos aquellos productos que no tienen categoria asignada
+
+SELECT p.Nombre AS [Nombre del producto],
+       p.Precio AS [Precio]
+FROM Categoria AS c
+RIGHT JOIN Producto AS p
+ON c.CategoriaID = p.Categoria
+WHERE Categoria is null;
+
+--FULL JOIN 
+--Obtiene los datos de la tabla izquierda, los datos de la tabla derecha y todos las coincidencias
+--entre las dos
+
+SELECT *
+FROM Categoria AS c
+FULL JOIN Producto AS p
+ON c.CategoriaID = p.Categoria;
+
+--CROSS JOIN 
+--Hace un producto cartesiano 
+
+SELECT *
+FROM Categoria AS c
+CROSS JOIN Producto AS p;
+
+
+--otro CROSS JOIN 
+
+SELECT *
+FROM Categoria AS c,
+     Producto AS p;
+
+--Otro INNER JOIN (Consultas de reunion)
+--SQL standar NO USAR
+	SELECT *
+FROM Categoria AS c,
+Producto AS p
+WHERE c.CategoriaID = p.Categoria;
+
+--Consultas de agregado 
+--Agregacion
+--count(*) cuenta las filas
+--count(campo) cuenta las filas pero no cuenta los null
+--min() obtiene el valor minimo de un campo
+--max() obtiene el valor maximo de un campo
+--avg() obtiene la media aritmetica o el promedio de un campo
+--sum() obtiene el total o la sumatoria
+
+
+USE NORTHWND;
+	GO
+	
+	--Cuantos clientes hay
+
+	select COUNT(*) AS [NUMERO DE CLIENTES]
+	FROM Customers;
+
+
+	--CUANTAS VENTAS SE HAN REALIZADO
+	select COUNT(*)
+	FROM Orders;
+
+	--CUANTAS VENTAS SE REALIZARON EN 1996
+	select COUNT(*)
+	FROM Orders
+	WHERE DATEPART (YEAR, OrderDate) = 1996;
+	
+	--Seleccionar la venta de la fecha mas antigua que se hizo
+
+	SELECT MIN(OrderDate) AS [Fecha Primera Venta] FROM
+	Orders;
+
+	--Seleccionar el total que sze ha vendido
+	SELECT SUM(UnitPrice * Quantity) AS [Total de Ventas]
+	FROM [Order Details]
+	
+    --Seleccionar el total de ventas entre 1996 y 1997
+	SELECT SUM(UnitPrice * Quantity) AS [Total de Ventas]
+	FROM [Order Details] AS od
+    INNER JOIN Orders AS o
+	ON o.OrderID = o.OrderID
+	WHERE DATEPART(yy, o.OrderDate) between 1996 AND 1997
+	AND o.CustomerID = 'AROUT';
+
+	-- Seleccionar las ventas totales a cada uno de nuestros clientes
+
+	SELECT c.CustomerID AS [Cliente],
+	SUM(UnitPrice * Quantity) AS [Total de Ventas]
+	FROM [Order Details] AS od
+    INNER JOIN Orders AS o
+	ON o.OrderID = o.OrderID
+	INNER JOIN Customers AS c
+	WHERE DATEPART(yy, o.OrderDate) between 1996 AND 1997
+	GROUP BY c.CompanyName;
